@@ -8,10 +8,11 @@
 import UIKit
 import Social
 import MobileCoreServices
+import UniformTypeIdentifiers
 import Photos
 
 @available(swift, introduced: 5.0)
-open class RSIShareViewController: SLComposeServiceViewController {
+open class RSIUIViewController: UIViewController {
     var hostAppBundleIdentifier = ""
     var appGroupId = ""
     var sharedMedia: [SharedMediaFile] = []
@@ -36,6 +37,24 @@ open class RSIShareViewController: SLComposeServiceViewController {
     // Redirect to host app when user click on Post
     open override func didSelectPost() {
         saveAndRedirect(message: contentText)
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        loadIds()
+        if let content = extensionContext!.inputItems[0] as? NSExtensionItem {
+            if let contents = content.attachments {
+                for (index, attachment) in (contents).enumerated() {
+                    if attachment.hasItemConformingToTypeIdentifier(textContentType) {
+                        handleText(content: content, attachment: attachment, index: index)
+
+                    } else if attachment.hasItemConformingToTypeIdentifier(urlContentType) {
+                        handleUrl(content: content, attachment: attachment, index: index)
+                    }
+                }
+            }
+
+        }
     }
     
     open override func viewDidAppear(_ animated: Bool) {
