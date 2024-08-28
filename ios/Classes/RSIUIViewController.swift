@@ -1,10 +1,3 @@
-//
-//  RSIShareViewController.swift
-//  receive_sharing_intent
-//
-//  Created by Kasem Mohamed on 2024-01-25.
-//
-
 import UIKit
 import Social
 import MobileCoreServices
